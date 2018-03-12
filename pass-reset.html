@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <title>Notifier - Password Reset</title>
+
+  <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> -->
+  <link rel="stylesheet" href="./material.min.css">
+  <style media="screen">
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .pass-reset-submit {
+      text-align: right;
+      padding-right: 20px;
+      margin-bottom: 20px;
+      letter-spacing: 10px;
+    }
+    .pass-reset-submit a {
+      letter-spacing: 1.5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="password-reset-container">
+    <div class="demo-card-square mdl-card mdl-shadow--4dp">
+      <div class="mdl-card__title mdl-card--expand">
+        <h4 class="mdl-card__title-text">Reset Password</h4>
+      </div>
+      <div class="mdl-card__supporting-text">
+        <div class="response"></div>
+        <!-- add patterns  for validation -->
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="password" id="new-password">
+          <label class="mdl-textfield__label" for="new-password">New Password</label>
+          <!-- <span class="mdl-textfield__error">Invalid Notifier ID</span> -->
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="password" id="confirm-password">
+          <label class="mdl-textfield__label" for="confirm-password">Confirm Password</label>
+          <span class="mdl-textfield__error">Passwords Does not match</span>
+        </div>
+      </div>
+      <div class="pass-reset-submit">
+        <a class="mdl-button mdl-button--colored mdl-js-button mdl-button--raised mdl-js-ripple-effect">Save</a>
+      </div>
+    </div>
+  </div>
+  <script src="./material.min.js"></script>
+  <script src="./jquery.min.js"></script>
+  <script type="text/javascript">
+    var $passResetContainer = $(".password-reset-container");
+    $passResetContainer.find(".pass-reset-submit").click(function (e) {
+      e.preventDefault();
+      var newPassword = $passResetContainer.find('#new-password').val();
+      var confirmPassword = $passResetContainer.find('#confirm-password').val();
+      if(newPassword === confirmPassword) {
+        $.ajax({
+          type: 'POST',
+          url: '/server/forgot_password/forgot_password_recover.php',
+          data: {
+            newpassword: newPassword
+          }
+        }).done(function (data) {
+          if($.trim(data) === '1') {
+            alert('Password changed successffully');
+            location.href='./index.html';
+          } else if($.trim(data) === '0'){
+            alert('Something Went Wrong');
+          } else {
+            alert('Unknown Error');
+          }
+        });
+      } else {
+        var a = $('#confirm-password').parent().addClass('is-invalid');
+      }
+
+    });
+  </script>
+</body>
+
+</html>
